@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- 移除預加載以避免 GitHub Pages 問題 -->
+    <!-- 預加載音頻資源但不使用預加載標籤 -->
 </head>
 <body>
     <!-- 初始互動覆蓋層 - 現在使用去背圖像 -->
@@ -28,12 +28,12 @@
     <div class="music-player">
         <!-- 添加封面圖片區域 -->
         <div class="album-cover">
-            <img id="cover-image" src="covers/song1.jpg" alt="專輯封面">
+            <img id="cover-image" src="covers/default.jpg" alt="專輯封面">
         </div>
         
         <div class="song-info">
-            <h2 id="song-title">抒情花車</h2>
-            <p id="song-artist">動力花車</p>
+            <h2 id="song-title">載入中...</h2>
+            <p id="song-artist">藝術家</p>
         </div>
         
         <div class="progress-bar">
@@ -63,11 +63,9 @@
         </div>
     </div>
 
-    <!-- 音頻元素 - 使用直接源 -->
-    <audio id="audio" preload="auto">
-        <source src="music/song1.mp3" type="audio/mpeg">
-        您的瀏覽器不支持音頻元素。
-    </audio>
+    <!-- 音頻元素 - 添加muted和autoplay屬性支持自動播放 -->
+    <audio id="audio" preload="none" muted></audio>
+    <audio id="backup-audio" preload="none" muted></audio>
     
     <script src="script.js"></script>
 </body>
