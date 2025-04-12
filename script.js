@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM 完全加載');
     
+    // 調試訊息
+    console.log('初始化音樂播放器...');
+    
     // 獲取覆蓋層元素
     const initialOverlay = document.getElementById('initial-overlay');
     const dllmLogo = document.getElementById('dllm-logo');
@@ -23,11 +26,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const volumeIcon = document.querySelector('#volume-icon');
     const songList = document.querySelector('#song-list');
     
+    // 調試獲取的元素
+    console.log('Audio元素:', audio);
+    console.log('播放按鈕:', playBtn);
+    console.log('覆蓋層:', initialOverlay);
+    
     // 讓音樂播放器在背景中可見，但交互被覆蓋層擋住
     document.querySelector('.music-player').style.opacity = '1';
     
     // 點擊覆蓋層處理邏輯
     initialOverlay.addEventListener('click', function() {
+        console.log('覆蓋層被點擊');
         // 播放動畫：logo向上滑動
         initialOverlay.classList.add('slide-up');
         
@@ -48,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 啟用音頻並播放的函數
     function enableAudioAndPlay() {
+        console.log('嘗試啟用音頻並播放');
         // 取消靜音
         audio.muted = false;
         if (backupAudio) backupAudio.muted = false;
@@ -58,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (backupAudio) backupAudio.volume = targetVol;
         
         // 開始播放
+        console.log('即將調用playSong()...');
         playSong();
         
         console.log('用戶交互已完成，音樂開始播放');
@@ -86,20 +97,32 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             name: "抒情花車",
             artist: "動力花車",
-            path: "https://github.com/weien0610/DLLM-Music/raw/audio-files/music/song1.mp3",
-            cover: "covers/song1.jpg"
+            path: window.location.hostname.includes("github.io") ? 
+                  "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/music/song1.mp3" : 
+                  "music/song1.mp3",
+            cover: window.location.hostname.includes("github.io") ? 
+                   "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song1.jpg" : 
+                   "covers/song1.jpg"
         },
         {
             name: "花車時代rap",
             artist: "動力花車",
-            path: "https://github.com/weien0610/DLLM-Music/raw/audio-files/music/song2.mp3",
-            cover: "covers/song2.jpg"
+            path: window.location.hostname.includes("github.io") ? 
+                  "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/music/song2.mp3" : 
+                  "music/song2.mp3",
+            cover: window.location.hostname.includes("github.io") ? 
+                   "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song2.jpg" : 
+                   "covers/song2.jpg"
         },
         {
             name: "錯位時空",
             artist: "動力花車",
-            path: "https://github.com/weien0610/DLLM-Music/raw/audio-files/music/song3.mp3",
-            cover: "covers/song3.jpg"
+            path: window.location.hostname.includes("github.io") ? 
+                  "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/music/song3.mp3" : 
+                  "music/song3.mp3",
+            cover: window.location.hostname.includes("github.io") ? 
+                   "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song3.jpg" : 
+                   "covers/song3.jpg"
         }
     ];
 
@@ -123,11 +146,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化音頻並嘗試自動播放
     function initAudio() {
         if (songs.length > 0) {
+            console.log('初始化音頻...');
+            
             // 設置音頻源
             audio.src = songs[0].path;
             console.log('初始化時設置音頻源:', songs[0].path);
             songTitle.textContent = songs[0].name;
             songArtist.textContent = songs[0].artist;
+            
+            // 強制加載音頻
+            audio.load();
+            console.log('音頻已加載');
             
             // 設置初始封面圖片
             if (songs[0].cover) {
@@ -135,25 +164,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 coverImage.alt = `${songs[0].name} 封面`;
             }
             
-            // 強制設置靜音和初始音量（確保自動播放）
+            // 設置音量但保持靜音（等待用戶交互）
+            audio.volume = volumeEl.value || 0.7;
             audio.muted = true;
-            audio.volume = 0;
             
             // 設置備用音頻
             if (backupAudio) {
                 backupAudio.src = songs[0].path;
+                backupAudio.load();
+                backupAudio.volume = volumeEl.value || 0.7;
                 backupAudio.muted = true;
-                backupAudio.volume = 0;
             }
-            
-            // 加載音頻
-            audio.load();
-            if (backupAudio) backupAudio.load();
             
             // 加載歌曲列表
             loadSongs();
             
-            // 不再自動嘗試播放，等待用戶點擊覆蓋層
+            console.log('音頻初始化完成，等待用戶交互');
         }
     }
     
@@ -186,9 +212,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 嘗試使用備用音頻
     function tryBackupAudio() {
-        if (!backupAudio) return;
+        if (!backupAudio) {
+            console.error('備用音頻元素不存在');
+            return;
+        }
         
         console.log('嘗試使用備用音頻元素');
+        
+        // 確保設置了正確的音頻源
+        if (!backupAudio.src || !backupAudio.src.includes(songs[songIndex].path)) {
+            console.log('設置備用音頻源:', songs[songIndex].path);
+            backupAudio.src = songs[songIndex].path;
+            backupAudio.load();
+        }
+        
+        // 確保不是靜音
+        backupAudio.muted = false;
         
         // 嘗試播放備用音頻
         const backupPlayPromise = backupAudio.play();
@@ -197,11 +236,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('備用音頻播放成功！');
                 isPlaying = true;
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                
+                // 切換到顯示播放指示器
+                playBtn.classList.add('playing');
             }).catch(error => {
                 console.error('備用音頻播放也失敗:', error);
+                
+                // 顯示詳細錯誤訊息
+                if (error.name) {
+                    console.error('錯誤類型:', error.name);
+                }
+                if (error.message) {
+                    console.error('錯誤訊息:', error.message);
+                }
+                
+                // 直接在控制台顯示有幫助的診斷訊息
+                if (error.name === 'NotAllowedError') {
+                    console.error('需要用戶交互才能播放音頻。請確保在用戶點擊或互動後播放音樂。');
+                } else if (error.name === 'AbortError') {
+                    console.error('播放操作被中斷，可能是頁面加載問題或用戶取消了操作。');
+                }
+                
                 isPlaying = false;
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.classList.remove('playing');
             });
+        } else {
+            console.error('瀏覽器不支持Promise API，無法可靠地檢測播放狀態');
         }
     }
     
@@ -281,7 +342,10 @@ document.addEventListener('DOMContentLoaded', function() {
             coverImage.src = song.cover;
             coverImage.alt = `${song.name} 封面`;
         } else {
-            coverImage.src = 'covers/default.jpg';
+            // 根據環境選擇正確的默認封面路徑
+            coverImage.src = window.location.hostname.includes("github.io") ? 
+                    "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/default.jpg" : 
+                    "covers/default.jpg";
             coverImage.alt = '預設封面';
         }
         
@@ -298,31 +362,49 @@ document.addEventListener('DOMContentLoaded', function() {
     function playSong() {
         try {
             console.log('嘗試播放歌曲:', songs[songIndex].path);
+            console.log('當前音頻狀態:', {
+                src: audio.src,
+                muted: audio.muted,
+                volume: audio.volume,
+                paused: audio.paused
+            });
+            
+            // 確保設置了正確的音頻源
+            if (!audio.src || !audio.src.includes(songs[songIndex].path)) {
+                console.log('重新設置音頻源...');
+                audio.src = songs[songIndex].path;
+                audio.load();
+            }
+            
+            // 確保音頻不是靜音
+            audio.muted = false;
             
             // 播放
             const playPromise = audio.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log('播放成功');
+                    console.log('播放成功!');
                     isPlaying = true;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 }).catch(error => {
                     console.error('播放失敗:', error);
                     
-                    // 如果失敗，嘗試使用備用音頻
-                    if (backupAudio) {
-                        backupAudio.play().then(() => {
-                            console.log('備用音頻播放成功');
-                            isPlaying = true;
-                            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                        }).catch(err => {
-                            console.error('備用音頻也失敗:', err);
-                            isPlaying = false;
-                            playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                        });
+                    // 顯示詳細錯誤訊息
+                    if (error.name) {
+                        console.error('錯誤類型:', error.name);
                     }
+                    if (error.message) {
+                        console.error('錯誤訊息:', error.message);
+                    }
+                    
+                    // 嘗試備用音頻
+                    console.log('嘗試使用備用音頻...');
+                    tryBackupAudio();
                 });
+            } else {
+                console.log('瀏覽器不支持Promise API');
+                tryBackupAudio();
             }
         } catch (e) {
             console.error('播放過程中發生錯誤:', e);

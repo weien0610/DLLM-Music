@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>音樂播放器</title>
+    <base href="./">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- 添加跨域支持 -->
-    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
+    <script>
+        console.log('頁面加載開始');
+        window.addEventListener('load', function() {
+            console.log('頁面完全加載完成，包括所有相依資源');
+        });
+    </script>
+    
+    <!-- 預加載音頻資源但不使用預加載標籤 -->
 </head>
 <body>
     <!-- 初始互動覆蓋層 - 現在使用去背圖像 -->
@@ -29,7 +36,7 @@
     <div class="music-player">
         <!-- 添加封面圖片區域 -->
         <div class="album-cover">
-            <img id="cover-image" src="covers/default.jpg" alt="專輯封面">
+            <img id="cover-image" src="covers/song1.jpg" alt="專輯封面">
         </div>
         
         <div class="song-info">
@@ -64,9 +71,9 @@
         </div>
     </div>
 
-    <!-- 音頻元素 - 添加muted和autoplay屬性支持自動播放 -->
-    <audio id="audio" preload="auto" muted crossorigin="anonymous"></audio>
-    <audio id="backup-audio" preload="auto" muted crossorigin="anonymous"></audio>
+    <!-- 音頻元素 - 添加muted和crossorigin屬性支持自動播放 -->
+    <audio id="audio" preload="auto" crossorigin="anonymous" muted onerror="console.error('音頻加載錯誤:', this.error);"></audio>
+    <audio id="backup-audio" preload="auto" crossorigin="anonymous" muted onerror="console.error('備用音頻加載錯誤:', this.error);"></audio>
     
     <script src="script.js"></script>
 </body>

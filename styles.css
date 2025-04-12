@@ -328,32 +328,36 @@ h1 {
     transform: scale(1.1);
 }
 
-/* 初始互動覆蓋層 - 使其完全透明 */
+/* 初始覆蓋層樣式 */
 .initial-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: transparent; /* 完全透明背景 */
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
-    transition: opacity 0.5s ease;
-    backdrop-filter: blur(3px); /* 輕微模糊背景 */
-    pointer-events: all; /* 確保可以接收點擊事件 */
+    cursor: pointer;
+    transition: transform 1s ease, opacity 1s ease;
+}
+
+.initial-overlay.slide-up {
+    transform: translateY(-100%);
+    opacity: 0;
 }
 
 .logo-container {
     text-align: center;
-    animation: pulse 2s infinite ease-in-out;
-    background: rgba(255, 255, 255, 0.3); /* 半透明白色背景 */
-    padding: 30px;
-    border-radius: 20px;
-    backdrop-filter: blur(10px); /* 更強的模糊效果 */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    max-width: 90%;
+}
+
+.logo-container img {
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
@@ -368,79 +372,34 @@ h1 {
     }
 }
 
-#dllm-logo {
-    max-width: 280px;
-    max-height: 280px;
-    transition: transform 0.3s ease;
-    /* 添加特效讓普通圖像看起來像透明的 */
-    mix-blend-mode: multiply; /* 混合模式使白色背景消失 */
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2)); /* 添加陰影 */
-}
-
-#dllm-logo:hover {
-    transform: scale(1.05);
-}
-
 .tap-hint {
-    font-size: 1.2rem;
-    color: #333;
-    margin-top: 20px;
+    color: white;
+    font-size: 18px;
+    margin-top: 15px;
     animation: fadeInOut 2s infinite;
-    font-weight: bold;
-    text-shadow: 0 0 5px white;
-    background-color: rgba(255, 255, 255, 0.7); /* 半透明背景 */
-    padding: 8px 16px;
-    border-radius: 20px;
-    display: inline-block; /* 使背景只覆蓋文字區域 */
 }
 
 @keyframes fadeInOut {
-    0% {
+    0%, 100% {
         opacity: 0.5;
     }
     50% {
         opacity: 1;
     }
-    100% {
-        opacity: 0.5;
-    }
 }
 
-/* 頂部Logo區域 - 移除白色背景條並放大logo */
+/* 頂部logo樣式 */
 .header-logo {
     position: fixed;
-    top: 10px; /* 增加頂部間距 */
-    left: 0;
-    width: 100%;
-    background: transparent; /* 移除白色背景 */
-    box-shadow: none; /* 移除陰影 */
-    text-align: center;
-    padding: 0;
+    top: 20px;
+    left: 20px;
     z-index: 100;
     display: none;
-    transition: all 0.5s ease;
-    pointer-events: none; /* 使logo不攔截點擊事件 */
 }
 
 .small-logo {
-    height: 75px; /* 再放大logo */
-    mix-blend-mode: multiply; /* 讓Logo看起來透明 */
-    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.15)); /* 增強陰影 */
-    transform: translateY(0); /* 初始位置 */
-    animation: float 3s ease-in-out infinite; /* 添加漂浮動畫 */
-}
-
-/* 添加漂浮動畫 */
-@keyframes float {
-    0% {
-        transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-    100% {
-        transform: translateY(0px);
-    }
+    width: 100px;
+    height: auto;
 }
 
 /* 動畫類 */
