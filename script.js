@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   "https://weien0610.github.io/DLLM-Music/music/song2.mp3" : 
                   "music/song2.mp3",
             cover: window.location.hostname.includes("github.io") ? 
-                   "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song2.jpg" : 
+                   "covers/song2.jpg" : 
                    "covers/song2.jpg"
         },
         {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   "https://weien0610.github.io/DLLM-Music/music/song3.mp3" : 
                   "music/song3.mp3",
             cover: window.location.hostname.includes("github.io") ? 
-                   "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song3.jpg" : 
+                   "covers/song3.jpg" : 
                    "covers/song3.jpg"
         }
     ];
