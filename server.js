@@ -1,3 +1,6 @@
+// 本地開發服務器
+// 注意：GitHub Pages部署時不需要此文件，僅用於本地開發
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -67,4 +70,6 @@ app.listen(PORT, () => {
   console.log(`音樂播放器服務器運行在 http://localhost:${PORT}/`);
   console.log('請在瀏覽器中打開上述地址');
   console.log('按Ctrl+C停止服務器');
+  console.log('\n注意：這只是本地開發服務器');
+  console.log('在GitHub Pages上部署時，將直接訪問 https://weien0610.github.io/DLLM-Music/');
 }); 
