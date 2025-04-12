@@ -185,6 +185,7 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.2s ease;
+    position: relative; /* 用於加載指示器定位 */
 }
 
 .song-list li:hover {
@@ -195,6 +196,43 @@ h1 {
     background: #e0e9fd;
     color: #4285f4;
     font-weight: bold;
+}
+
+/* 加載中的歌曲樣式 */
+.song-list li.loading {
+    position: relative;
+    opacity: 0.7;
+}
+
+.song-list li.loading::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    border: 2px solid #4285f4;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+/* 播放按鈕加載中狀態 */
+.controls button .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* 美化滾動條 */

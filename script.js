@@ -34,9 +34,38 @@ document.addEventListener('DOMContentLoaded', function() {
     // 讓音樂播放器在背景中可見，但交互被覆蓋層擋住
     document.querySelector('.music-player').style.opacity = '1';
     
+    // 預先加載所有歌曲的音頻
+    function preloadAudioFiles() {
+        console.log('開始預加載音頻文件');
+        
+        // 創建音頻元素陣列用於預加載
+        const preloaders = [];
+        
+        // 遍歷歌曲列表並預加載
+        songs.forEach((song, index) => {
+            const preloader = new Audio();
+            preloader.src = song.path;
+            preloader.preload = "metadata"; // 只預加載元數據以減少初始加載時間
+            
+            // 添加加載事件
+            preloader.addEventListener('loadedmetadata', function() {
+                console.log(`歌曲 ${index + 1} (${song.name}) 元數據加載完成`);
+            });
+            
+            preloader.addEventListener('canplaythrough', function() {
+                console.log(`歌曲 ${index + 1} (${song.name}) 可以流暢播放了`);
+            });
+            
+            preloaders.push(preloader);
+        });
+    }
+    
     // 點擊覆蓋層處理邏輯
     initialOverlay.addEventListener('click', function() {
         console.log('覆蓋層被點擊');
+        // 預加載所有音頻文件
+        preloadAudioFiles();
+        
         // 播放動畫：logo向上滑動
         initialOverlay.classList.add('slide-up');
         
@@ -299,6 +328,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const li = document.createElement('li');
             li.textContent = `${song.name} - ${song.artist}`;
             li.addEventListener('click', () => {
+                // 如果點擊當前播放的歌曲，且已暫停，則恢復播放
+                if (index === songIndex && !isPlaying) {
+                    playSong();
+                    return;
+                }
+                
+                // 如果是當前歌曲且正在播放，則暫停
+                if (index === songIndex && isPlaying) {
+                    pauseSong();
+                    return;
+                }
+                
+                // 否則加載並播放新歌曲
                 songIndex = index;
                 loadSong(songs[songIndex]);
                 
@@ -306,7 +348,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 audio.muted = false;
                 if (backupAudio) backupAudio.muted = false;
                 
-                playSong();
+                // 添加視覺反饋
+                li.classList.add('loading');
+                
+                // 嘗試播放前短暫延遲，確保加載開始
+                setTimeout(() => {
+                    playSong();
+                    li.classList.remove('loading');
+                }, 100);
             });
             
             if (index === songIndex) {
@@ -337,6 +386,25 @@ document.addEventListener('DOMContentLoaded', function() {
         audio.src = song.path;
         console.log('設置音頻源:', song.path);
         
+        // 添加加載檢測
+        const loadingTimeout = setTimeout(() => {
+            console.log('音頻加載超時，嘗試重新加載');
+            // 嘗試重新加載
+            audio.load();
+        }, 5000); // 5秒超時
+        
+        // 當元數據加載完成時
+        audio.onloadedmetadata = function() {
+            clearTimeout(loadingTimeout);
+            console.log('音頻元數據加載完成');
+        };
+        
+        // 當音頻可以播放時
+        audio.oncanplay = function() {
+            clearTimeout(loadingTimeout);
+            console.log('音頻可以開始播放');
+        };
+        
         // 設置封面圖片
         if (song.cover) {
             coverImage.src = song.cover;
@@ -352,10 +420,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // 同時更新備用音頻源
         if (backupAudio) {
             backupAudio.src = song.path;
+            backupAudio.load();
         }
         
         // 更新歌曲列表高亮
         updateActiveSong();
+        
+        // 加載音頻
+        audio.load();
     }
     
     // 播放歌曲
@@ -366,50 +438,91 @@ document.addEventListener('DOMContentLoaded', function() {
                 src: audio.src,
                 muted: audio.muted,
                 volume: audio.volume,
-                paused: audio.paused
+                paused: audio.paused,
+                readyState: audio.readyState
             });
             
-            // 確保設置了正確的音頻源
-            if (!audio.src || !audio.src.includes(songs[songIndex].path)) {
-                console.log('重新設置音頻源...');
-                audio.src = songs[songIndex].path;
-                audio.load();
+            // 檢查音頻是否已經準備好播放
+            if (audio.readyState < 2) { // HAVE_CURRENT_DATA = 2
+                console.log('音頻尚未準備好，等待準備完成後再播放');
+                
+                // 添加臨時加載指示
+                playBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                
+                // 設置一個事件監聽器，當音頻可以播放時開始播放
+                const canPlayHandler = function() {
+                    console.log('音頻現在可以播放了');
+                    audio.play()
+                        .then(() => {
+                            console.log('播放成功!');
+                            isPlaying = true;
+                            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        })
+                        .catch(error => {
+                            console.error('即使音頻已準備好，播放仍然失敗:', error);
+                            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                            tryBackupAudio();
+                        });
+                    
+                    // 移除事件監聽器
+                    audio.removeEventListener('canplay', canPlayHandler);
+                };
+                
+                audio.addEventListener('canplay', canPlayHandler);
+                
+                // 設置超時，避免永久等待
+                setTimeout(() => {
+                    audio.removeEventListener('canplay', canPlayHandler);
+                    if (!isPlaying) {
+                        console.log('等待超時，直接嘗試播放');
+                        attemptDirectPlay();
+                    }
+                }, 3000);
+                
+                return;
             }
             
-            // 確保音頻不是靜音
-            audio.muted = false;
+            // 直接嘗試播放
+            attemptDirectPlay();
             
-            // 播放
-            const playPromise = audio.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('播放成功!');
-                    isPlaying = true;
-                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
-                }).catch(error => {
-                    console.error('播放失敗:', error);
-                    
-                    // 顯示詳細錯誤訊息
-                    if (error.name) {
-                        console.error('錯誤類型:', error.name);
-                    }
-                    if (error.message) {
-                        console.error('錯誤訊息:', error.message);
-                    }
-                    
-                    // 嘗試備用音頻
-                    console.log('嘗試使用備用音頻...');
-                    tryBackupAudio();
-                });
-            } else {
-                console.log('瀏覽器不支持Promise API');
-                tryBackupAudio();
-            }
         } catch (e) {
             console.error('播放過程中發生錯誤:', e);
             isPlaying = false;
             playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+    }
+    
+    // 直接嘗試播放
+    function attemptDirectPlay() {
+        // 確保音頻不是靜音
+        audio.muted = false;
+        
+        // 播放
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('播放成功!');
+                isPlaying = true;
+                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(error => {
+                console.error('播放失敗:', error);
+                
+                // 顯示詳細錯誤訊息
+                if (error.name) {
+                    console.error('錯誤類型:', error.name);
+                }
+                if (error.message) {
+                    console.error('錯誤訊息:', error.message);
+                }
+                
+                // 嘗試備用音頻
+                console.log('嘗試使用備用音頻...');
+                tryBackupAudio();
+            });
+        } else {
+            console.log('瀏覽器不支持Promise API');
+            tryBackupAudio();
         }
     }
     
@@ -639,4 +752,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始化音頻（但不嘗試自動播放，等待用戶交互）
     initAudio();
+    
+    // 當頁面完全載入後預加載歌曲元數據
+    window.addEventListener('load', function() {
+        console.log('頁面完全加載，開始預加載音頻元數據');
+        setTimeout(() => {
+            songs.forEach((song, index) => {
+                const tempAudio = new Audio();
+                tempAudio.preload = "metadata";
+                tempAudio.src = song.path;
+                console.log(`預加載歌曲 ${index + 1} 元數據: ${song.name}`);
+                
+                // 刪除參考以允許垃圾回收
+                setTimeout(() => {
+                    tempAudio.src = "";
+                }, 3000);
+            });
+        }, 2000); // 延遲2秒後開始預加載，避免影響頁面載入
+    });
 });
