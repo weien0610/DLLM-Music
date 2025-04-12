@@ -1,81 +1,74 @@
 # DLLM 音樂播放器
 
-這是一個網頁音樂播放器，具有以下功能：
-
-- 播放、暫停、上一首、下一首控制
-- 進度條顯示和控制
-- 音量控制
-- 播放列表切換
+歡迎使用 DLLM 音樂播放器，這是一個純前端的音樂播放器，支持在瀏覽器中播放音樂。
 
 ## 在線體驗
 
-訪問[DLLM音樂播放器](https://weien0610.github.io/DLLM-Music/)即可在線體驗。
+訪問我們的 GitHub Pages 版本：
+[https://weien0610.github.io/DLLM-Music/](https://weien0610.github.io/DLLM-Music/)
 
-## 如何使用
+## 功能
 
-1. 克隆這個倉庫到你的本地
+- 自動播放（需要用戶交互）
+- 播放、暫停、上一首、下一首控制
+- 進度條顯示和控制
+- 音量調節
+- 播放列表
+- 專輯封面顯示
+
+## 如何使用（本地開發）
+
+### 方法 1：直接打開 HTML 文件
+
+您可以直接在瀏覽器中打開 `index.html` 文件，但由於瀏覽器安全限制，某些功能可能不可用。
+
+### 方法 2：使用 Node.js 服務器（推薦）
+
+1. 確保已安裝 Node.js
+2. 安裝依賴：
    ```
-   git clone https://github.com/weien0610/DLLM-Music.git
+   npm install express cors
    ```
-2. 將你的音樂文件放在 `music` 目錄中
-3. 將專輯封面圖片放在 `covers` 目錄中
-4. 編輯 `script.js` 文件，在 `songs` 數組中添加你的音樂信息
-5. 打開 `index.html` 文件，或使用以下命令啟動本地服務器：
+3. 啟動服務器：
    ```
    node server.js
    ```
-   然後在瀏覽器中訪問 `http://localhost:8080`
+4. 打開瀏覽器訪問 `http://localhost:8080`
 
 ## 添加音樂
 
-在 `script.js` 文件中，找到 `songs` 數組，按照以下格式添加你的音樂：
+1. 將 MP3 音樂文件放入 `music/` 目錄
+2. 將專輯封面圖片放入 `covers/` 目錄
+3. 編輯 `script.js` 文件中的 `songs` 數組：
 
 ```javascript
 const songs = [
     {
-        title: '歌曲標題',
-        artist: '歌手/藝術家',
-        path: 'music/你的音樂文件.mp3',
-        cover: 'covers/專輯封面.jpg'
+        name: "歌曲名稱",
+        artist: "藝術家",
+        path: "music/歌曲文件.mp3",
+        cover: "covers/封面圖片.jpg"
     },
-    // 可以添加更多歌曲...
+    // 添加更多歌曲...
 ];
 ```
 
-## 支持的音樂格式
+## 本地開發與 GitHub Pages 的區別
 
-該播放器支持所有現代瀏覽器支持的音頻格式，主要包括：
+- **本地開發**：使用 Node.js 服務器 (`server.js`) 提供更好的音頻文件處理
+- **GitHub Pages**：純靜態部署，不需要服務器代碼
 
-- MP3
-- WAV
-- OGG
-- AAC
+## 關於瀏覽器自動播放政策
 
-## 關於GitHub Pages部署
-
-本項目已部署在GitHub Pages上，您可以通過以下步驟更新您的部署：
-
-1. 完成代碼修改後，提交您的更改：
-   ```
-   git add .
-   git commit -m "更新描述"
-   git push origin main
-   ```
-2. GitHub Actions將自動部署您的更改到GitHub Pages
-3. 幾分鐘後，您的更改將在 https://weien0610.github.io/DLLM-Music/ 上可見
-
-## 注意事項
-
-- 請確保你有權利使用你添加的音樂
-- 在部署到公開網站之前，請確保你遵守當地的版權法律
-- 該播放器僅供個人學習和非商業用途使用
+現代瀏覽器通常會阻止自動播放帶聲音的媒體，直到用戶與頁面進行交互。
+我們的播放器會顯示一個開始覆蓋層，當用戶點擊後才開始播放音樂。
 
 ## 技術細節
 
-- 純HTML、CSS和JavaScript實現
-- 不依賴任何外部庫（除了Material Icons）
-- 響應式設計，適合在各種設備上使用
+- 純 HTML, CSS 和 JavaScript
+- 支持主流瀏覽器
+- 響應式設計，適合各種設備
 
 ## 授權
 
-MIT許可證 
+MIT 許可證 

@@ -1,0 +1,473 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBackground 15s ease infinite;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    padding: 20px;
+}
+
+@keyframes gradientBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* 主音樂播放器容器 */
+.music-player {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+}
+
+/* 封面圖片樣式 */
+.album-cover {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.album-cover img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.album-cover img:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 歌曲信息 */
+.song-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.song-info h2 {
+    margin: 0;
+    font-size: 1.7rem;
+    color: #333;
+}
+
+.song-info p {
+    margin: 5px 0 0;
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* 進度條 */
+.progress-bar {
+    background: #f0f0f0;
+    border-radius: 5px;
+    height: 6px;
+    width: 100%;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.progress {
+    background: #4285f4;
+    border-radius: 5px;
+    height: 100%;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+/* 時間顯示 */
+.time-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+/* 控制按鈕 */
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.controls button {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    margin: 0 15px;
+    color: #555;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.controls button:hover {
+    color: #4285f4;
+    transform: scale(1.1);
+}
+
+.controls #play {
+    font-size: 1.8rem;
+}
+
+/* 音量控制 */
+.volume-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.volume-control i {
+    margin-right: 10px;
+    color: #555;
+    cursor: pointer;
+}
+
+.volume-control input {
+    width: 100%;
+    cursor: pointer;
+}
+
+/* 歌曲列表 */
+.song-list-container {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.song-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.song-list li {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.song-list li:hover {
+    background: #f0f0f0;
+}
+
+.song-list li.active {
+    background: #e0e9fd;
+    color: #4285f4;
+    font-weight: bold;
+}
+
+/* 美化滾動條 */
+.song-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.song-list-container::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.song-list-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+/* 音頻權限覆蓋層 */
+.audio-permission-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.permission-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.permission-content h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.permission-content p {
+    margin-bottom: 25px;
+    color: #666;
+    line-height: 1.5;
+}
+
+.start-audio-btn {
+    background: linear-gradient(to right, #e73c7e, #23a6d5);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.start-audio-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 響應式設計 */
+@media (max-width: 480px) {
+    .music-player {
+        padding: 20px;
+    }
+    
+    .album-cover img {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .song-info h2 {
+        font-size: 1.4rem;
+    }
+}
+
+/* 循環按鈕樣式 */
+#loop {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    margin: 0 15px;
+    color: #555;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+#loop:hover {
+    color: #4285f4;
+    transform: scale(1.1);
+}
+
+#loop.active {
+    color: #4285f4;
+}
+
+/* 如果已有按鈕樣式，確保循環按鈕與其他控制按鈕樣式一致 */
+.controls button {
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    margin: 0 15px;
+    color: #555;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.controls button:hover {
+    color: #4285f4;
+    transform: scale(1.1);
+}
+
+/* 初始互動覆蓋層 - 使其完全透明 */
+.initial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* 完全透明背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.5s ease;
+    backdrop-filter: blur(3px); /* 輕微模糊背景 */
+    pointer-events: all; /* 確保可以接收點擊事件 */
+}
+
+.logo-container {
+    text-align: center;
+    animation: pulse 2s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.3); /* 半透明白色背景 */
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px); /* 更強的模糊效果 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#dllm-logo {
+    max-width: 280px;
+    max-height: 280px;
+    transition: transform 0.3s ease;
+    /* 添加特效讓普通圖像看起來像透明的 */
+    mix-blend-mode: multiply; /* 混合模式使白色背景消失 */
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2)); /* 添加陰影 */
+}
+
+#dllm-logo:hover {
+    transform: scale(1.05);
+}
+
+.tap-hint {
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 20px;
+    animation: fadeInOut 2s infinite;
+    font-weight: bold;
+    text-shadow: 0 0 5px white;
+    background-color: rgba(255, 255, 255, 0.7); /* 半透明背景 */
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-block; /* 使背景只覆蓋文字區域 */
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+/* 頂部Logo區域 - 移除白色背景條並放大logo */
+.header-logo {
+    position: fixed;
+    top: 10px; /* 增加頂部間距 */
+    left: 0;
+    width: 100%;
+    background: transparent; /* 移除白色背景 */
+    box-shadow: none; /* 移除陰影 */
+    text-align: center;
+    padding: 0;
+    z-index: 100;
+    display: none;
+    transition: all 0.5s ease;
+    pointer-events: none; /* 使logo不攔截點擊事件 */
+}
+
+.small-logo {
+    height: 75px; /* 再放大logo */
+    mix-blend-mode: multiply; /* 讓Logo看起來透明 */
+    filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.15)); /* 增強陰影 */
+    transform: translateY(0); /* 初始位置 */
+    animation: float 3s ease-in-out infinite; /* 添加漂浮動畫 */
+}
+
+/* 添加漂浮動畫 */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+/* 動畫類 */
+.slide-up {
+    animation: slideUp 1s forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+} 

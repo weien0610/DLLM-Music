@@ -1,0 +1,10 @@
+# Node.js 相關文件
+node_modules/
+package-lock.json
+
+# 服務器文件（因為GitHub Pages不使用服務器端代碼）
+server.js
+
+# 系統文件
+.DS_Store        # Mac系統文件
+Thumbs.db        # Windows縮略圖文件
