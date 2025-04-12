@@ -86,19 +86,19 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             name: "抒情花車",
             artist: "動力花車",
-            path: "music/song1.mp3",
+            path: "https://github.com/weien0610/DLLM-Music/raw/audio-files/music/song1.mp3",
             cover: "covers/song1.jpg"
         },
         {
             name: "花車時代rap",
             artist: "動力花車",
-            path: "music/song2.mp3",
+            path: "https://github.com/weien0610/DLLM-Music/raw/audio-files/music/song2.mp3",
             cover: "covers/song2.jpg"
         },
         {
             name: "錯位時空",
             artist: "動力花車",
-            path: "music/song3.mp3",
+            path: "https://github.com/weien0610/DLLM-Music/raw/audio-files/music/song3.mp3",
             cover: "covers/song3.jpg"
         }
     ];
