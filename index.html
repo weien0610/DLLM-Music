@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- 預加載音頻資源但不使用預加載標籤 -->
+    <!-- 添加跨域支持 -->
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
 </head>
 <body>
     <!-- 初始互動覆蓋層 - 現在使用去背圖像 -->
@@ -64,8 +65,8 @@
     </div>
 
     <!-- 音頻元素 - 添加muted和autoplay屬性支持自動播放 -->
-    <audio id="audio" preload="none" muted></audio>
-    <audio id="backup-audio" preload="none" muted></audio>
+    <audio id="audio" preload="auto" muted crossorigin="anonymous"></audio>
+    <audio id="backup-audio" preload="auto" muted crossorigin="anonymous"></audio>
     
     <script src="script.js"></script>
 </body>
