@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
             name: "抒情花車",
             artist: "動力花車",
             path: window.location.hostname.includes("github.io") ? 
-                  "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/music/song1.mp3" : 
+                  "https://weien0610.github.io/DLLM-Music/music/song1.mp3" : 
                   "music/song1.mp3",
             cover: window.location.hostname.includes("github.io") ? 
                    "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song1.jpg" : 
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
             name: "花車時代rap",
             artist: "動力花車",
             path: window.location.hostname.includes("github.io") ? 
-                  "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/music/song2.mp3" : 
+                  "https://weien0610.github.io/DLLM-Music/music/song2.mp3" : 
                   "music/song2.mp3",
             cover: window.location.hostname.includes("github.io") ? 
                    "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song2.jpg" : 
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
             name: "錯位時空",
             artist: "動力花車",
             path: window.location.hostname.includes("github.io") ? 
-                  "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/music/song3.mp3" : 
+                  "https://weien0610.github.io/DLLM-Music/music/song3.mp3" : 
                   "music/song3.mp3",
             cover: window.location.hostname.includes("github.io") ? 
                    "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song3.jpg" : 
