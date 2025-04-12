@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   "https://weien0610.github.io/DLLM-Music/music/song1.mp3" : 
                   "music/song1.mp3",
             cover: window.location.hostname.includes("github.io") ? 
-                   "https://raw.githubusercontent.com/weien0610/DLLM-Music/main/covers/song1.jpg" : 
+                   "covers/song1.jpg" : 
                    "covers/song1.jpg"
         },
         {
