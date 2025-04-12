@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直接播放音樂</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        button {
+            background: #1db954;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 30px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #18a449;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>音樂播放器</h1>
+        <p>點擊按鈕開始播放音樂</p>
+        
+        <div>
+            <button id="song1">播放歌曲1</button>
+            <button id="song2">播放歌曲2</button>
+            <button id="song3">播放歌曲3</button>
+        </div>
+        
+        <div>
+            <button id="pause-btn">暫停</button>
+            <button id="play-btn">播放</button>
+        </div>
+        
+        <p id="now-playing">當前未播放任何歌曲</p>
+        
+        <!-- 音頻元素 -->
+        <audio id="audio-player" controls style="width: 100%; margin-top: 20px;"></audio>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 獲取元素
+            const audioPlayer = document.getElementById('audio-player');
+            const song1Btn = document.getElementById('song1');
+            const song2Btn = document.getElementById('song2');
+            const song3Btn = document.getElementById('song3');
+            const pauseBtn = document.getElementById('pause-btn');
+            const playBtn = document.getElementById('play-btn');
+            const nowPlaying = document.getElementById('now-playing');
+            
+            // 歌曲列表
+            const songs = [
+                {
+                    title: '歌曲1',
+                    file: 'music/song1.WAV'
+                },
+                {
+                    title: '歌曲2',
+                    file: 'music/song2.WAV'
+                },
+                {
+                    title: '歌曲3',
+                    file: 'music/song3.WAV'
+                }
+            ];
+            
+            // 設置第一首歌曲並播放
+            function setupFirstSong() {
+                audioPlayer.src = songs[0].file;
+                nowPlaying.textContent = '當前播放: ' + songs[0].title;
+                
+                // 嘗試播放
+                const playPromise = audioPlayer.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => {
+                        console.error('自動播放失敗:', e);
+                        alert('需要點擊頁面再點擊播放按鈕來開始播放');
+                    });
+                }
+            }
+            
+            // 播放指定歌曲
+            function playSong(index) {
+                audioPlayer.src = songs[index].file;
+                nowPlaying.textContent = '當前播放: ' + songs[index].title;
+                audioPlayer.play().catch(e => {
+                    console.error('播放失敗:', e);
+                });
+            }
+            
+            // 事件監聽器
+            song1Btn.addEventListener('click', () => playSong(0));
+            song2Btn.addEventListener('click', () => playSong(1));
+            song3Btn.addEventListener('click', () => playSong(2));
+            
+            pauseBtn.addEventListener('click', () => audioPlayer.pause());
+            playBtn.addEventListener('click', () => audioPlayer.play());
+            
+            // 當用戶與頁面交互時
+            document.addEventListener('click', function() {
+                if (audioPlayer.paused) {
+                    audioPlayer.play().catch(e => {
+                        console.error('交互後播放失敗:', e);
+                    });
+                }
+            }, {once: true});
+            
+            // 設置第一首歌曲
+            setupFirstSong();
+        });
+    </script>
+</body>
+</html> 

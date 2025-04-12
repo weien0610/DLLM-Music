@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音樂播放器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- 預加載音頻資源但不使用預加載標籤 -->
+</head>
+<body>
+    <!-- 初始互動覆蓋層 - 現在使用去背圖像 -->
+    <div id="initial-overlay" class="initial-overlay">
+        <div class="logo-container">
+            <!-- 請確保使用去背的PNG圖像 -->
+            <img src="dllm-logo-transparent.png" alt="DLLM Logo" id="dllm-logo">
+            <p class="tap-hint">點擊任意位置開始播放</p>
+        </div>
+    </div>
+
+    <!-- 頂部固定區域，用於DLLM Logo -->
+    <div id="header-logo" class="header-logo">
+        <img src="dllm-logo-transparent.png" alt="DLLM Logo" class="small-logo">
+    </div>
+
+    <div class="music-player">
+        <!-- 添加封面圖片區域 -->
+        <div class="album-cover">
+            <img id="cover-image" src="covers/default.jpg" alt="專輯封面">
+        </div>
+        
+        <div class="song-info">
+            <h2 id="song-title">載入中...</h2>
+            <p id="song-artist">藝術家</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        
+        <div class="time-container">
+            <div id="current-time">0:00</div>
+            <div id="duration">0:00</div>
+        </div>
+        
+        <div class="controls">
+            <button id="prev"><i class="fas fa-step-backward"></i></button>
+            <button id="play"><i class="fas fa-play"></i></button>
+            <button id="next"><i class="fas fa-step-forward"></i></button>
+        </div>
+        
+        <div class="volume-control">
+            <i class="fas fa-volume-up" id="volume-icon"></i>
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="0.7">
+        </div>
+        
+        <div class="song-list-container">
+            <ul class="song-list" id="song-list">
+                <!-- 歌曲列表將由JavaScript動態生成 -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- 音頻元素 - 添加muted和autoplay屬性支持自動播放 -->
+    <audio id="audio" preload="none" muted></audio>
+    <audio id="backup-audio" preload="none" muted></audio>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
